@@ -1,0 +1,12 @@
+[
+  {
+    "title": "主题设置",
+    "key": "edit-theme",
+    "value": "light"
+  },
+  {
+    "title": "项目管理",
+    "key": "project-manage",
+    "children": []
+  }
+]

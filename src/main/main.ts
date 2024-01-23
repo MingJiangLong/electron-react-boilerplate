@@ -13,8 +13,14 @@ import { app, BrowserWindow, shell, ipcMain } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import MenuBuilder from './menu';
-import { resolveHtmlPath } from './util';
+import { readElectronFile, resolveHtmlPath, writeElectronFile } from './util';
+const RESOURCES_PATH = app.isPackaged
+  ? path.join(process.resourcesPath, 'assets')
+  : path.join(__dirname, '../../assets');
 
+const getAssetPath = (...paths: string[]): string => {
+  return path.join(RESOURCES_PATH, ...paths);
+};
 class AppUpdater {
   constructor() {
     log.transports.file.level = 'info';
@@ -31,6 +37,33 @@ ipcMain.on('ipc-example', async (event, arg) => {
   event.reply('ipc-example', msgTemplate('pong'));
 });
 
+/**
+ * ==================================================
+ * = cache目录操作api
+ * ==================================================
+ */
+
+/** 缓存写操作 */
+const CACHE_WRITE = 'CACHE_WRITE';
+ipcMain.on(CACHE_WRITE, async (event, fileName: string, data: string) => {
+  try {
+    await writeElectronFile(getAssetPath('cache', fileName), data);
+    event.reply(CACHE_WRITE);
+  } catch (error) {
+    event.reply(CACHE_WRITE, error);
+  }
+});
+/** 缓存读操作 */
+const CACHE_READ = 'CACHE_READ';
+ipcMain.on(CACHE_READ, async (event, fileName: string) => {
+  try {
+    const result = await readElectronFile(getAssetPath('cache', fileName));
+    event.reply(CACHE_READ, null, result);
+  } catch (error) {
+    event.reply(CACHE_READ, error, null);
+  }
+});
+//--------------------------------------------------
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support');
   sourceMapSupport.install();
@@ -60,14 +93,6 @@ const createWindow = async () => {
   if (isDebug) {
     await installExtensions();
   }
-
-  const RESOURCES_PATH = app.isPackaged
-    ? path.join(process.resourcesPath, 'assets')
-    : path.join(__dirname, '../../assets');
-
-  const getAssetPath = (...paths: string[]): string => {
-    return path.join(RESOURCES_PATH, ...paths);
-  };
 
   mainWindow = new BrowserWindow({
     show: false,
