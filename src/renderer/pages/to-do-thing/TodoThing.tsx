@@ -245,10 +245,12 @@ export default function () {
     if (unit == UNIT.W) return '本周';
     if (unit == UNIT.M) return '本月';
   }, [unit]);
+
   const WORK_TIME = {
     am: [9, 12],
     pm: [13.5, 18],
   };
+  
   useEffect(() => {
     initTodoTaskList();
   }, [unit]);

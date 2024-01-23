@@ -13,26 +13,15 @@ export default function (props: any) {
   const menus = [
     {
       key: 'AuditOutlined',
-      label: '待处理事项',
+      label: '任务规划',
       icon: <AuditOutlined />,
       onClick() {
         navigate('/to-do-thing');
       },
     },
     {
-      key: 'doc-manage',
-      label: '常用文档',
-      icon: <MailOutlined />,
-    },
-    {
-      key: '2',
-      label: '常用小工具',
-      children: [],
-      icon: <MailOutlined />,
-    },
-    {
       key: 'config',
-      label: '配置',
+      label: '应用配置',
       icon: <SettingOutlined />,
       onClick() {
         navigate('/config');
