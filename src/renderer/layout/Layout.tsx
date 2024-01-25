@@ -4,6 +4,9 @@ import {
   MailOutlined,
   SettingOutlined,
   AuditOutlined,
+  ScheduleOutlined,
+  ToolOutlined,
+  LinkOutlined,
 } from '@ant-design/icons';
 import { Outlet, useNavigate } from 'react-router-dom';
 const { Content, Footer, Sider } = Layout;
@@ -12,11 +15,19 @@ export default function (props: any) {
   const navigate = useNavigate();
   const menus = [
     {
-      key: 'AuditOutlined',
-      label: '任务规划',
-      icon: <AuditOutlined />,
+      key: 'LinkOutlined',
+      label: '常用网站',
+      icon: <LinkOutlined />,
       onClick() {
-        navigate('/to-do-thing');
+        navigate('/usual-website');
+      },
+    },
+    {
+      key: 'ScheduleOutlined',
+      label: '任务规划',
+      icon: <ScheduleOutlined />,
+      onClick() {
+        navigate('/task-plan');
       },
     },
     {

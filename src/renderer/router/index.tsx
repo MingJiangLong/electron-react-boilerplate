@@ -1,7 +1,9 @@
 import { createHashRouter } from 'react-router-dom';
 import ConfigPage from '../pages/ConfigPage';
 import Layout from '../layout/Layout';
-import TodoThing from '../pages/to-do-thing/TodoThing';
+import TaskPlan from '../pages/task-plan/TaskPlan';
+import RemotePage from '../pages/RemotePage';
+import UsualWebsite from '../pages/UsualWebsite';
 
 export const router = createHashRouter([
   {
@@ -13,8 +15,18 @@ export const router = createHashRouter([
         Component: ConfigPage,
       },
       {
-        path: '/to-do-thing',
-        Component: TodoThing,
+        path: '/task-plan',
+        Component: TaskPlan,
+      },
+      {
+        path: '/usual-website',
+        Component: UsualWebsite,
+        children: [
+          {
+            path: 'detail',
+            Component: RemotePage,
+          },
+        ],
       },
     ],
   },

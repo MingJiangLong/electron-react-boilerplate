@@ -14,6 +14,7 @@ import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import MenuBuilder from './menu';
 import { readElectronFile, resolveHtmlPath, writeElectronFile } from './util';
+import { initBrowserWindow } from './modules/WebBrowser';
 const RESOURCES_PATH = app.isPackaged
   ? path.join(process.resourcesPath, 'assets')
   : path.join(__dirname, '../../assets');
@@ -47,9 +48,11 @@ ipcMain.on('ipc-example', async (event, arg) => {
 const CACHE_WRITE = 'CACHE_WRITE';
 ipcMain.on(CACHE_WRITE, async (event, fileName: string, data: string) => {
   try {
-    await writeElectronFile(getAssetPath('cache', fileName), data);
+    await writeElectronFile(path.join(app.getPath('userData'), fileName), data);
     event.reply(CACHE_WRITE);
   } catch (error) {
+    console.log(error);
+
     event.reply(CACHE_WRITE, error);
   }
 });
@@ -57,10 +60,12 @@ ipcMain.on(CACHE_WRITE, async (event, fileName: string, data: string) => {
 const CACHE_READ = 'CACHE_READ';
 ipcMain.on(CACHE_READ, async (event, fileName: string) => {
   try {
-    const result = await readElectronFile(getAssetPath('cache', fileName));
+    const result = await readElectronFile(
+      path.join(app.getPath('userData'), fileName),
+    );
     event.reply(CACHE_READ, null, result);
   } catch (error) {
-    event.reply(CACHE_READ, error, null);
+    event.reply(CACHE_READ, null, JSON.stringify([]));
   }
 });
 //--------------------------------------------------
